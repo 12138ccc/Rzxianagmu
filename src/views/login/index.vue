@@ -51,6 +51,12 @@
     </el-form>
 
   </div>
+  <!-- 环境变量的作用
+  1 正常公司中 有几个号环境 4 开发 Dev 测试 test 预发uat 线上 pro
+  2 在项目里如何配置这几个环境 通过.env配置 base api
+  开发环境的接口前缀 /api
+  线上环境的接口前缀 /prod/api
+   -->
 </template>
 
 <script>
