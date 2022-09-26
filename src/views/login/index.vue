@@ -83,7 +83,7 @@ export default {
       try {
         await this.$refs.loginForm.validate()
         this.loading = true
-        // 接口请求
+        // 接口请求1
         await this.$store.dispatch('user/loginAction', this.loginForm)
         this.$router.push('/')
       } finally {
