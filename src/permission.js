@@ -2,8 +2,11 @@ import router from '@/router'
 import store from '@/store'
 
 const WhileList = ['/login', '/404']
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   if (store.getters.token) { // 处于登录状态
+    if (!store.state.user.userinfo.userId) {
+      await store.dispatch('user/getUserInfo')
+    }
     if (to.path === '/login') {
       next('/')
     } else {

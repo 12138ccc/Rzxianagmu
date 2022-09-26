@@ -65,6 +65,16 @@ export const constantRoutes = [
       }
     ]
   },
+  // {
+  //   path: '/dashboard11',
+  //   component: Layout,
+  //   children: [{
+  //     path: '',
+  //     name: 'Dashboard',
+  //     component: () => import('@/views/dashboard/index'),
+  //     meta: { title: 'Dashboard11', icon: 'dashboard' }
+  //   }]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

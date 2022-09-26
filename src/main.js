@@ -6,6 +6,9 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 // import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
+import { imgerror } from '@/directive'
+Vue.directive('imgerror', imgerror)
+
 import '@/styles/index.scss' // global css
 
 import App from './App'
@@ -15,9 +18,14 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import * as directives from '@/directive'
+Object.keys(directives).forEach(ele => {
+  Vue.directive(ele, directives[ele])
+})
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
+
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
