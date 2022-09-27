@@ -5,7 +5,7 @@ import { Message } from 'element-ui'
 import router from '@/router'
 // 通过axios 创建axios实例
 
-const TimeOut = 1
+const TimeOut = 3600
 function IscheckTimeOut() {
   const currentTime = Date.now() // 时间2 真正的时间
   const timeStamp = (currentTime - store.getters.hrsassTime) / 1000
