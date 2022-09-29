@@ -33,7 +33,7 @@ service.interceptors.request.use(config => {
 })
 
 service.interceptors.response.use(response => {
-  console.log(response)
+  // console.log(response)
   const { success, message, data } = response.data
   if (success) { // 业务逻辑成功
     return data
@@ -42,7 +42,7 @@ service.interceptors.response.use(response => {
   Message.error(message)
   return Promise.reject(new Error(message))
 }, error => {
-  console.log(error.message)
+  // console.log(error.message)
   if (error.response && error.response.status === 401) {
     store.dispatch('user/logout')
     router.push('/login')
