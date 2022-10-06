@@ -1,12 +1,12 @@
 <template>
-  <div class="departments-container">
+  <div v-loading="loading" class="departments-container">
     <el-card>
       <tree-tools :tree-node="company" :is-root="false" @addDept="handleAddDept" />
     </el-card>
     <el-tree :data="departs" :props="defaultProps" :default-expand-all="true">
-      <tree-tools slot-scope="{data}" :tree-node="data" @addDept="handleAddDept" />
+      <tree-tools slot-scope="{data}" :tree-node="data" @addDept="handleAddDept" @editDept="editDept" @refreshList="getDepartments" />
     </el-tree>
-    <add-dept :dialog-visible.sync="dialogVisible" :tree-node="currentNode" />
+    <add-dept ref="addDept" :dialog-visible.sync="dialogVisible" :tree-node="currentNode" />
   </div>
 </template>
 
@@ -27,7 +27,8 @@ export default {
       },
       dialogVisible: false,
       company: { name: '江苏传智播客教育科技股份有限公司', manager: '负责人', id: '' },
-      currentNode: {}
+      currentNode: {},
+      loading: false
     }
   },
 
@@ -37,16 +38,28 @@ export default {
 
   methods: {
     async getDepartments() {
-      const { depts, companyManage, companyName } = await getDepartments()
-      // this.departs = depts
-      this.departs = tranListToTreeData(depts, '')
-      // console.log(this.departs)
-      this.company = { name: companyName, manager: companyManage, id: '' }
+      try {
+        this.loading = true
+        const { depts, companyManage, companyName } = await getDepartments()
+        // this.departs = depts
+        this.departs = tranListToTreeData(depts, '')
+        // console.log(this.departs)
+        this.company = { name: companyName, manager: companyManage, id: '' }
+      } finally {
+        this.loading = false
+      }
     },
     handleAddDept(node) {
       // addDept显示
       this.dialogVisible = true
       this.currentNode = node
+    },
+    editDept(node) {
+      this.dialogVisible = true
+      this.currentNode = { ...node }
+      // 回显数据
+      // node 赋值给addDept formData
+      this.$refs.addDept.formData = { ...node }
     }
   }
 }
