@@ -9,7 +9,7 @@
 //     })
 //   }
 // }
-
+import * as filters from '@/filters'
 const fn = require.context('./', true, /\.vue$/)
 
 console.log(fn.keys()) // 路径
@@ -22,5 +22,9 @@ export default (Vue) => {
   components.forEach(ele => {
     // console.log(ele)
     Vue.component(ele.default.name, ele.default)
+  })
+  // 时间过滤器
+  Object.keys(filters).forEach(key => {
+    Vue.filter(key, filters[key])
   })
 }

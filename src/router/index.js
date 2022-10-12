@@ -38,7 +38,17 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
-
+  {
+    path: '/import',
+    component: Layout,
+    hidden: true,
+    children: [
+      { path: '',
+        name: 'import',
+        component: () => import('@/views/import/index')
+      }
+    ]
+  },
   // {
   //   path: 'external-link',
   //   component: Layout,
