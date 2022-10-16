@@ -1,27 +1,33 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
-    <svg-icon icon-class="eye-open" />
-    <UploadExcel :before-upload="beforeUpload" :on-success="handleSuccess" />
+    <upload-img @on-success="onSuccess1" />
+    <upload-img @on-success="onSuccess2" />
   </div>
 
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import UploadExcel from '@/components/UploadExce'
+
 export default {
   name: 'Dashboard',
-  components: { UploadExcel },
+
   computed: {
     ...mapGetters([
       'name'
     ])
   },
+
   methods: {
     handleSuccess(data) {
       console.log('data', data)
       // 做具体的业务逻辑
+    },
+    onSuccess1(val) {
+      console.log(123, val)
+    },
+    onSuccess2(val) {
+      alert(456, val)
     },
     beforeUpload(file) { // 出于上传文件之前 可能需要对文件校验的场景 提供beforeUpload字段，可以使用者自由定义校验规则。
       console.log(file)

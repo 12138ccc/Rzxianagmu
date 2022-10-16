@@ -1,5 +1,6 @@
 <template>
   <div class="user-info">
+    <i class="el-icon-printer" @click="$router.push('/employees/print/'+userId+'?type=personal')" />
     <!-- 个人信息 -->
     <el-form label-width="220px">
       <!-- 工号 入职时间 -->
@@ -58,6 +59,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
+            <upload-img ref="uploadAvatar" :default-url="getEmployeeAvatar" @on-success="uploadAvratorSuccess" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -91,7 +93,9 @@
 
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
-        </el-form-item>
+
+          <upload-img ref="employeesPic" @on-success="uploadPicSuccess" :default-url="getEmployeePic" /></el-form-item>
+
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
             <el-option
@@ -390,11 +394,14 @@
 
 <script>
 import EmployeeEnum from '@/api/constant/employees'
-import { getUserById } from '@/api/user'
+import { getUserById, saveUserById } from '@/api/user'
 import { getEmployeeInfo, saveEmployeeInfo } from '@/api/employees'
 export default {
   data() {
     return {
+
+      getEmployeeAvatar: '',
+      getEmployeePic: '',
       userId: this.$route.params.id,
       EmployeeEnum, // 员工枚举数据
       userInfo: {},
@@ -470,14 +477,23 @@ export default {
   methods: {
     async getUserById() {
       const res = await getUserById(this.userId)
+      if (res.staffPhoto) {
+        this.getEmployeeAvatar = res.staffPhoto
+      }
       this.userInfo = res
     },
     async getEmployeeInfo() {
       const res = await getEmployeeInfo(this.userId)
       this.formData = res
+      if (res.staffPhoto) {
+        this.getEmployeePic = res.staffPhoto
+      }
     },
     async saveEmployeeInfoss() {
       try {
+        if (this.$refs.employeesPic.loading) {
+          return this.$message.error('头像上传中')
+        }
         await saveEmployeeInfo(this.formData)
         this.$message.success('更新成功')
       } catch (error) {
@@ -486,11 +502,20 @@ export default {
     },
     async saveUserById() {
       try {
-        await this.saveUserById(this.userInfo)
+        if (this.$refs.uploadAvatar.loading) {
+          return this.$message.error('头像上传中')
+        }
+        await saveUserById(this.userInfo)
         this.$message.success('更新成功')
       } catch (error) {
-        this.$message.success('更新失败')
+        this.$message.error('更新失败')
       }
+    },
+    uploadAvratorSuccess(data) {
+      this.userInfo.staffPhoto = data.imgUrl
+    },
+    uploadPicSuccess(data) {
+      this.formData.staffPhoto = data.imgUrl
     }
   }
 }

@@ -13,9 +13,15 @@
           </template>
         </PageTools>
         <!-- 放置表格和分页 -->
+
         <el-card>
           <el-table v-loading="loading" border :data="list">
             <el-table-column label="序号" sortable="" width="80" type="index" />
+            <el-table-column label="头像" sortable="" width="80" type="index">
+              <template slot-scope="{row}">
+                <img style="width:100px; height: 100px;" :src="row.staffPhoto" alt="" @click="genCode(row.staffPhoto)">
+              </template>
+            </el-table-column>
             <el-table-column label="姓名" prop="username" />
             <el-table-column label="工号" prop="workNumber" />
             <el-table-column label="聘用形式" prop="formOfEmployment" :formatter="formatterFn">
@@ -57,6 +63,14 @@
             />
           </el-row>
         </el-card>
+        <el-dialog
+          title="提示"
+          :visible.sync="dialogVisibleCode"
+          width="50%"
+        >
+          <canvas ref="canvas" />
+
+        </el-dialog>
       </div>
 
     </template>
@@ -68,6 +82,7 @@
 import EnumHireType from '@/api/constant/employees'
 import addemployee from './components/add-employee.vue'
 import { getEmployeeList, delEmployee } from '@/api/employees'
+import QRCode from 'qrcode'
 export default {
   name: 'HrsaasIndex',
   components: { addemployee },
@@ -78,6 +93,7 @@ export default {
         size: 10
       },
       dialogVisible: false,
+      dialogVisibleCode: false,
       list: [],
       hireType: EnumHireType.hireType,
       total: 0,
@@ -165,6 +181,17 @@ export default {
     },
     goDetail(row) {
       this.$router.push('/employees/detail/' + row.id)
+    },
+    genCode(staffPhoto) {
+      console.log(staffPhoto)
+      if (!staffPhoto) return this.$message.error('暂无头像')
+      this.dialogVisibleCode = true
+      this.$nextTick(() => {
+        QRCode.toCanvas(this.$refs.canvas, staffPhoto, function(error) {
+          if (error) console.error(error)
+          console.log('success')
+        })
+      })
     }
   }
 }
